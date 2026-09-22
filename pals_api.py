@@ -66,6 +66,57 @@ def get_license_details(person_id, license_id, license_number):
     })
 
 
+# ── profession → PA board name mapping ───────────────────────────────────────
+
+_BOARD_MAP = {
+    "medicine":                        "Pennsylvania State Board of Medicine",
+    "osteopathic medicine":            "Pennsylvania State Board of Osteopathic Medicine",
+    "physical therapy":                "Pennsylvania State Board of Physical Therapy",
+    "occupational therapy":            "Pennsylvania State Board of Occupational Therapy",
+    "chiropractic":                    "Pennsylvania State Board of Chiropractic",
+    "nursing":                         "Pennsylvania State Board of Nursing",
+    "dentistry":                       "Pennsylvania State Board of Dentistry",
+    "podiatry":                        "Pennsylvania State Board of Podiatric Medicine",
+    "pharmacy":                        "Pennsylvania State Board of Pharmacy",
+    "optometry":                       "Pennsylvania State Board of Optometry",
+    "psychology":                      "Pennsylvania State Board of Psychology",
+    "social work":                     "Pennsylvania State Board of Social Workers, Marriage and Family Therapists and Professional Counselors",
+    "speech":                          "Pennsylvania State Board of Examiners in Speech-Language Pathology and Audiology",
+    "speech-language pathology":       "Pennsylvania State Board of Examiners in Speech-Language Pathology and Audiology",
+    "audiology":                       "Pennsylvania State Board of Examiners in Speech-Language Pathology and Audiology",
+    "radiology personnel":             "Pennsylvania State Board of Medicine",
+    "athletic trainer":                "Pennsylvania State Board of Medicine",
+    "veterinary medicine":             "Pennsylvania State Board of Veterinary Medicine",
+    "cosmetology":                     "Pennsylvania State Board of Cosmetology",
+    "funeral director":                "Pennsylvania State Board of Funeral Directors",
+    "engineering":                     "Pennsylvania State Registration Board for Professional Engineers, Land Surveyors and Geologists",
+    "real estate":                     "Pennsylvania State Real Estate Commission",
+    "nursing home administrator":      "Pennsylvania State Board of Examiners of Nursing Home Administrators",
+    "landscape architecture":          "Pennsylvania State Board of Landscape Architects",
+    "architecture":                    "Pennsylvania State Architects Licensure Board",
+    "auctioneer":                      "Pennsylvania State Board of Auctioneer Examiners",
+    "barber":                          "Pennsylvania State Board of Barber Examiners",
+    "vehicle":                         "Pennsylvania State Board of Vehicle Manufacturers, Dealers and Salespersons",
+    "crane operator":                  "Pennsylvania State Board of Crane Operators",
+}
+
+
+def profession_to_board(profession_type):
+    """Map PALS ProfessionType to the full Pennsylvania State Board name."""
+    if not profession_type:
+        return ""
+    key = profession_type.strip().lower()
+    # exact match first
+    if key in _BOARD_MAP:
+        return _BOARD_MAP[key]
+    # partial match — find the first key that appears in the profession string
+    for k, v in _BOARD_MAP.items():
+        if k in key:
+            return v
+    # fallback: prefix with standard format
+    return f"Pennsylvania State Board of {profession_type.strip().title()}"
+
+
 def get_disciplinary_file_path():
     data, _ = _get_raw("BaseApi/GetSettings", {"settingCode": "DISCIPLINARYACTIONFILEPATH"})
     return json.loads(data.decode())

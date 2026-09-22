@@ -55,6 +55,7 @@ from pals_api import (
     search_by_license, search_by_name,
     get_license_details,
     get_disciplinary_file_path, download_disciplinary_doc,
+    profession_to_board,
 )
 from credentials.snowflake_config import SNOWFLAKE, PIMASTER, PILICENSEMASTER
 from credentials.config import OUTPUT_DISCIPLINARY_DIR
@@ -407,11 +408,12 @@ def main():
         except Exception as e:
             log.warning(f"  [{npi}] Detail fetch error: {e}")
 
-        expiry  = (details.get("ExpiryDate")  or "").strip()
-        issue   = (details.get("IssueDate")   or "").strip()
-        status  = (details.get("Status")      or pals_match.get("Status") or "").strip()
-        board   = (details.get("Profession")  or pals_match.get("ProfessionType") or "").strip()
-        flag    = active_flag(expiry) or status   # Active if future, else raw PALS status
+        expiry      = (details.get("ExpiryDate")  or "").strip()
+        issue       = (details.get("IssueDate")   or "").strip()
+        status      = (details.get("Status")      or pals_match.get("Status") or "").strip()
+        profession  = (details.get("Profession")  or pals_match.get("ProfessionType") or "").strip()
+        board       = profession_to_board(profession)
+        flag        = active_flag(expiry) or status   # Active if future, else raw PALS status
 
         log.info(f"  [{npi}] via {search_mode} | LIC={found_lic} | {flag} | exp={expiry}")
 

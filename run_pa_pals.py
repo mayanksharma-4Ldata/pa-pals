@@ -45,6 +45,7 @@ from pals_api import (
     get_license_details,
     get_disciplinary_file_path,
     download_disciplinary_doc,
+    profession_to_board,
 )
 from credentials.config import OUTPUT_LICENSES_DIR, OUTPUT_DISCIPLINARY_DIR
 
