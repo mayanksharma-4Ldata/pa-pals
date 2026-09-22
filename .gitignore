@@ -16,3 +16,6 @@ output/
 # env / secrets
 .env
 *.env
+
+# Snowflake credentials — never commit the real file
+credentials/snowflake_config.py
